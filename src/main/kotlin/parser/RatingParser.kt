@@ -6,22 +6,6 @@ import model.ParseResult
 import model.StudentRating
 import java.util.Locale
 
-
-fun sampleUsageOfRatingParser() {
-    val myDictionary = setOf("Name1", "Name2", "Name3") // dictionary used to validate legitimate student names.
-    val myParser = RatingParser(myDictionary) // new parser instances with above-defined dictionary as arg.
-
-    // ok: List of ParseResult objects.
-    // err: List of ParseError objects.
-    val (ok, err) = myParser.parse(
-        "Name1+++",
-        "Name3--",
-    )
-
-    ok.forEach(::println)   // Successfully parsed students
-    err.forEach(::println)  // Errors for unmatched or invalid inputs
-}
-
 /**
  *  Class used to parse plain-text student performance ratings into [StudentRating].
  *
@@ -30,7 +14,7 @@ fun sampleUsageOfRatingParser() {
  *
  *  All failed parsings will be saved as a [ParseError] object and returned alongside the results, contained within a [ParseResult].
  *
- *  @sample sampleUsageOfRatingParser
+ *  @sample isl.priv.brynj.samples.sampleUsageOfRatingParser
  *
  *  @property dictionary Set of names considered legitimate, to ensure that no textRating is assigned to a non-existing student.
  *
@@ -60,7 +44,6 @@ class RatingParser(val dictionary: Set<String>) {
                 try {
                     add(convertToStudentRating(textRating))
                 } catch (e: IllegalArgumentException) {
-
                     parseErrors.add(ParseError(textRating, e.message, e::class))
                 } catch (e: NoSuchElementException) {
                     parseErrors.add(ParseError(textRating, e.message, e::class))
@@ -87,7 +70,7 @@ class RatingParser(val dictionary: Set<String>) {
     }
 
     /** transforms Text to lower_snake_case format */
-    private val String.normalized: String
+    internal val String.normalized: String
         get() = lowercase(Locale.ROOT)
             .replace(" ", "_")
             .replace("-", "_")
